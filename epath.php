@@ -120,7 +120,7 @@ function print_map($map,$str){
 function process_map($map){
 	$x=0;$y=0;$a=array();$str='';$res= array();
 
-	for ($i=0;$i<120;$i++){
+	for ($i=0;$i<1120;$i++){
 		if($x<=4 && $y<=4){
 			if($x+1<=4){
 				if($map[$y][$x+1]==1 || $map[$y][$x+1]==9){
