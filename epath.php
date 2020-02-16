@@ -3,7 +3,6 @@
 /*
 objective: find all path from 0 to 9
 rules only can go right R or down D
-
 1) verify that vales of x and y are in valid range (in the grid 0 to 4)
 2) verify if there is a valid move in that case save it in str variable
 3) verify if there is an alternative path in that case save it to the array $a 
@@ -33,15 +32,13 @@ echo "execution time: <b>" . (time()-$init_time) . "seconds </b";
 function process_map($map){
 	$x=0;$y=0;$a=array();$str='';$res= array();
 
-	for ($i=0;$i<1000;$i++){
+	for ($i=0;$i<120;$i++){
 		if($x<=4 && $y<=4){
 			if($x+1<=4){
-				if($map[$y][$x+1]==1 || $map[$y][$x+1]==9 ){
-				
-					if($map[$y][$x+1]==9) {$x++;$str .= 'R';echo "end path: $str<br>";
-					array_push($res, $str);
-					$str=end($a);array_pop($a);
-					$y = substr_count($str, "D");$x = substr_count($str, "R");
+				if($map[$y][$x+1]==1 || $map[$y][$x+1]==9){
+					if($map[$y][$x+1]==9){
+						$x++;$str .= 'R';
+						array_push($res, $str);
 					}
 					else{
 						if($y+1<=4 && $map[$y+1][$x]>=1) array_push($a, "$str"."D");
@@ -50,11 +47,10 @@ function process_map($map){
 				}
 			}
 			if($y+1<=4){
-				if($map[$y+1][$x]==1 || $map[$y+1][$x]==9 ){
-					if($map[$y+1][$x]==9) {$y++;$str .= 'D';echo "end path: $str<br>";
-					array_push($res, $str);
-					$str=end($a);array_pop($a);
-					$y = substr_count($str, "D");$x = substr_count($str, "R");
+				if($map[$y+1][$x]==1 || $map[$y+1][$x]==9){
+					if($map[$y+1][$x]==9){
+						$y++;$str .= 'D';
+						array_push($res, $str);
 					}
 					else{
 						if($x+1<=4 && $map[$y][$x+1]>=1) array_push($a, "$str"."R");
@@ -63,7 +59,17 @@ function process_map($map){
 				}
 			}
 		}
+		if($y==4){
+			$str=end($a);array_pop($a);
+			$y = substr_count($str, "D");$x = substr_count($str, "R");
+		}
+	}
+	$xxx = array_unique($res);
+	echo "<br><br>";
+	for ($c=0;$c<count($xxx);$c++){
+		echo ($c+1).")result: ". $xxx[$c]."<br>";
 	}
 }
+
 
 ?>
