@@ -1,5 +1,4 @@
 <?php
-
 /*
 objective: find all path from 0 to 9
 rules only can go right R or down D
@@ -10,24 +9,67 @@ rules only can go right R or down D
 	- recall the last saved value in alternative paths array $a and delete it from the stack
 5) after finding all path end.. it is expected not too many moves (1000 max)
 */
-$init_time = time();
 
-$map = array(
+  	$init_time = time();
+
+	$map = array(
 		array(0,1,1,1,1),
 		array(1,-1,1,1,1),
 		array(1,1,-1,1,1),
 		array(1,-1,1,1,1),
 		array(1,1,1,-1,9));
-  
-echo $map[0][0]." ".$map[0][1]." ".$map[0][2]." ".$map[0][3]." ".$map[0][4]."<br>";
-echo $map[1][0]." ".$map[1][1]." ".$map[1][2]." ".$map[1][3]." ".$map[1][4]."<br>";
-echo $map[2][0]." ".$map[2][1]." ".$map[2][2]." ".$map[2][3]." ".$map[2][4]."<br>";
-echo $map[3][0]." ".$map[3][1]." ".$map[3][2]." ".$map[3][3]." ".$map[3][4]."<br>";
-echo $map[4][0]." ".$map[4][1]." ".$map[4][2]." ".$map[4][3]." ".$map[4][4]."<br>";
+?>
 
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+</head>
+<body>  
+<?php
+
+print_map($map,0);
 process_map($map);
 
 echo "execution time: <b>" . (time()-$init_time) . "seconds </b";
+
+function print_map($map,$str){
+	#echo "str: $str<br>";
+	$color_map = array(
+		array(1,0,0,0,0),
+		array(0,0,0,0,0),
+		array(0,0,0,0,0),
+		array(0,0,0,0,0),
+		array(0,0,0,0,0));
+
+	if(strlen($str)>0){
+		$y = 0;$x=0;
+		for ($c=0;$c<strlen($str);$c++){
+			if(substr($str, $c,1)=="D")$y++;
+			elseif(substr($str, $c,1)=="R")$x++;
+			$color_map[$y][$x]=1;
+		}
+	}
+  	echo "<table>";
+	for ($y=0;$y<5;$y++){
+		echo "<tr>";
+		for ($x=0;$x<5;$x++){
+			if(strlen($str)>0){
+				if($color_map[$y][$x])
+					echo "<td bgcolor=\"#00FF00\">".$map[$y][$x]."</td>";
+				else
+					echo "<td bgcolor=\"#FFFFFF\">".$map[$y][$x]."</td>";
+			}
+			else echo "<td bgcolor=\"#FFFFFF\">".$map[$y][$x]."</td>";
+		}
+		echo "</tr>";
+	}
+	echo "</table>";
+}
 
 function process_map($map){
 	$x=0;$y=0;$a=array();$str='';$res= array();
@@ -67,9 +109,9 @@ function process_map($map){
 	$xxx = array_unique($res);
 	echo "<br><br>";
 	for ($c=0;$c<count($xxx);$c++){
-		echo ($c+1).")result: ". $xxx[$c]."<br>";
+		echo ($c+1).")result: ". $xxx[$c]."<br>"; print_map($map,$xxx[$c]);
 	}
 }
-
-
 ?>
+</body>
+</html>
