@@ -13,11 +13,11 @@ rules only can go right R or down D
   	$init_time = time();
 
 	$map = array(
-		array(0,1,1,1,1),
+		array(0,1,1,-1,1),
 		array(1,-1,1,1,1),
 		array(1,1,-1,1,1),
 		array(1,-1,1,1,1),
-		array(1,1,1,-1,9));
+		array(1,1,1,1,9));
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +38,6 @@ process_map($map);
 echo "execution time: <b>" . (time()-$init_time) . "seconds </b";
 
 function print_map($map,$str){
-	#echo "str: $str<br>";
 	$color_map = array(
 		array(1,0,0,0,0),
 		array(0,0,0,0,0),
@@ -90,6 +89,7 @@ function process_map($map){
 			}
 			if($y+1<=4){
 				if($map[$y+1][$x]==1 || $map[$y+1][$x]==9){
+
 					if($map[$y+1][$x]==9){
 						$y++;$str .= 'D';
 						array_push($res, $str);
@@ -101,7 +101,16 @@ function process_map($map){
 				}
 			}
 		}
-		if($y==4){
+		//decide if it is the end of a path and to leave it and try another one.
+		$leavePath = $leaveX = $leaveY = false;
+		
+		if ($x<4 && $map[$y][$x+1]==-1) $leaveX = true;
+		if ($x==4) $leaveX = true;
+		
+		if ($y<4 && $map[$y+1][$x]==-1) $leaveY = true;
+		if ($y==4) $leaveY = true;
+		
+		if ($leaveX && $leaveY){
 			$str=end($a);array_pop($a);
 			$y = substr_count($str, "D");$x = substr_count($str, "R");
 		}
