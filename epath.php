@@ -14,10 +14,10 @@ rules only can go right R or down D
 
 	$map = array(
 		array(0,1,1,1,1),
-		array(1,-1,1,1,1),
-		array(1,1,-1,1,1),
-		array(1,-1,1,1,1),
-		array(1,1,1,-1,9));
+		array(1,1,1,1,1),
+		array(1,1,1,1,1),
+		array(1,1,1,1,1),
+		array(1,1,1,1,9));
 ?>
 
 <!DOCTYPE html>
@@ -29,10 +29,47 @@ table, th, td {
 }
 </style>
 </head>
-<body>  
+<body>
+	<SCRIPT language="JavaScript">
+
+	function displayResult(val){
+		//alert("here"+val.id);
+	
+	if(document.getElementById(val.id.substring(2)).checked){
+		document.getElementById(val.id.substring(2)).checked=false;
+		document.getElementById(val.id.substring(2)).value =1 ;
+		val.style.backgroundColor="#FFFFFF";
+	}
+	else{
+		document.getElementById(val.id.substring(2)).checked=true;
+		document.getElementById(val.id.substring(2)).value =val.id.substring(21);
+		val.style.backgroundColor="#00FF00";
+	}
+}
+
+
+</SCRIPT>
 <?php
 
-print_map($map,0);
+#try {
+if (isset($_POST['valuesgrid_checkbox'])){
+	$box=$_POST['valuesgrid_checkbox'];
+	if($box)
+	while (list ($key,$val) = @each ($box)){
+		$x = substr($val,0,1);
+		$y = substr($val,1,1);
+		$map[$y][$x] = -1;
+	}
+}
+else{
+	$map[1][1] = -1;
+	$map[2][2] = -1;
+	$map[3][1] = -1;
+	$map[4][3] = -1;
+}
+
+
+print_map($map,'');
 process_map($map);
 
 echo "execution time: <b>" . (time()-$init_time) . "seconds </b";
@@ -46,6 +83,7 @@ function print_map($map,$str){
 		array(0,0,0,0,0));
 
 	if(strlen($str)>0){
+		
 		$y = 0;$x=0;
 		for ($c=0;$c<strlen($str);$c++){
 			if(substr($str, $c,1)=="D")$y++;
@@ -53,6 +91,7 @@ function print_map($map,$str){
 			$color_map[$y][$x]=1;
 		}
 	}
+  	if(strlen($str)==0) echo "<form name=\"form1\" action=\"/a.php\" method=\"post\">";
   	echo "<table>";
 	for ($y=0;$y<5;$y++){
 		echo "<tr>";
@@ -60,14 +99,22 @@ function print_map($map,$str){
 			if(strlen($str)>0){
 				if($color_map[$y][$x])
 					echo "<td bgcolor=\"#00FF00\">".$map[$y][$x]."</td>";
-				else
-					echo "<td bgcolor=\"#FFFFFF\">".$map[$y][$x]."</td>";
+				else{
+					if($map[$y][$x]==-1) echo "<td bgcolor=\"#FF0000\">".$map[$y][$x]."</td>";
+					else echo "<td bgcolor=\"#FFFFFF\">".$map[$y][$x]."</td>";
+				}
 			}
-			else echo "<td bgcolor=\"#FFFFFF\">".$map[$y][$x]."</td>";
+			else {echo "<td bgcolor=\"#FFFFFF\" onclick=\"displayResult(this)\"id=TDvaluesgrid_checkbox$x$y>".$map[$y][$x]." ".
+				"<input type=\"checkbox\" style=\"display:none;\" name=\"valuesgrid_checkbox[]\" id=\"valuesgrid_checkbox$x$y\" value=\"0\">"
+			."</td>";
+			}
 		}
 		echo "</tr>";
 	}
+
 	echo "</table>";
+	if(strlen($str)==0)
+	echo "<input type=\"submit\" value=\"RECALCULATE\">	</form>";
 }
 
 function process_map($map){
@@ -109,7 +156,7 @@ function process_map($map){
 		
 		if ($y<4 && $map[$y+1][$x]==-1) $leaveY = true;
 		if ($y==4) $leaveY = true;
-		
+
 		if ($leaveX && $leaveY){
 			$str=end($a);array_pop($a);
 			$y = substr_count($str, "D");$x = substr_count($str, "R");
