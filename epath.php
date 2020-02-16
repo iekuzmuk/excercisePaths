@@ -13,11 +13,11 @@ rules only can go right R or down D
   	$init_time = time();
 
 	$map = array(
-		array(0,1,1,-1,1),
+		array(0,1,1,1,1),
 		array(1,-1,1,1,1),
 		array(1,1,-1,1,1),
 		array(1,-1,1,1,1),
-		array(1,1,1,1,9));
+		array(1,1,1,-1,9));
 ?>
 
 <!DOCTYPE html>
